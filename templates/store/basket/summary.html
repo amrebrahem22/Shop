@@ -4,5 +4,92 @@
 
 {% block content %}
 <h2 class="text-indigo-700 text-center font-bold">Basket</h2>
+<main class="pt-5">
+    <div class="container">
+        {% for item in basket %}
+            {% with product=item.product %}
+                <div data-index="{{product.id}}" class="product-item row mb-4 border">
+                    <div class="col-md-3 col-lg-2 order-md-first bg-light">
+                        <img width="120px" src="{{product.image.url}}" alt="" class="img-fluid mx-auto d-block">
+                    </div>
+                    <div class="col-md-6 col-lg-10 ps-md-3 ps-lg-10">
+                        <a href="{{product.get_absolute_url}}" class="text-decoration-none">{{product.title}}</a>
+                        <p>{{product.price}}</p>
+                        <h5>Quantity: 
+                            <label>Quantity: </label>
+                            <select id="select{{product.id}}">
+                                <option value="{{item.qty}}">{{item.qty}}</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </select>
+                            x {{product.price}}</h5>
+                    </div>
+                    <div class="col-md-4">
+                        <button id="add-button" class="update-button btn btn-outline-secondary btn-sm" data-index="{{product.id}}" value="{{product.id}}">Update</button>
+
+                        <button id="delete-button" class="delete-button btn btn-outline-secondary btn-sm" value="{{product.id}}" data-index="{{product.id}}">Delete</button>
+                    </div>
+                </div>
+            {% endwith %}
+        {% endfor %}
+        <div class="col-12 text-end">
+            <div class="h6 fw-bold">Sub Total: $<span id="subtotal">{{basket.get_total_price}}</span></div>
+        </div>
+    </div>
+</main>
+
+<script>
+	$(document).on('click', '.delete-button', function(e) {
+		e.preventDefault();
+
+        var prodid = $(this).data('index');
+
+		$.ajax({
+			type: 'POST',
+			url: "{% url 'basket:basket_delete' %}",
+			data: {
+				productid: $(this).data('index'),
+				csrfmiddlewaretoken: "{{ csrf_token }}",
+				action: 'delete'
+			},
+			success: function(json) {
+                $('.product-item[data-index="'+ prodid +'"]').remove();
+                document.getElementById('cart-qty').innerHTML = json.qty;
+                document.getElementById('subtotal').innerHTML = json.subtotal;
+			},
+			error: function (xhr, errmsg, err) {}
+		})
+	})
+	
+    $(document).on('click', '.update-button', function(e) {
+		e.preventDefault();
+
+        var prodid = $(this).data('index');
+
+		$.ajax({
+			type: 'POST',
+			url: "{% url 'basket:basket_update' %}",
+			data: {
+				productid: $(this).data('index'),
+                productqty: $('#select'+ prodid+ ' option:selected').text(),
+				csrfmiddlewaretoken: "{{ csrf_token }}",
+				action: 'post'
+			},
+			success: function(json) {
+                document.getElementById('cart-qty').innerHTML = json.qty;
+                document.getElementById('subtotal').innerHTML = json.subtotal;
+			},
+			error: function (xhr, errmsg, err) {}
+		})
+	})
+</script>
 
 {% endblock %}
