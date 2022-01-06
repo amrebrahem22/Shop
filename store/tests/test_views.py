@@ -1,5 +1,7 @@
+from importlib import import_module
 from unittest import skip
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.http import HttpRequest
 from django.test import Client, RequestFactory, TestCase
@@ -53,15 +55,16 @@ class TestViewResponses(TestCase):
 		self.assertTrue(html.startswith("\n<!DOCTYPE html>\n"))
 		self.assertEqual(response.status_code, 200)
 
-	def test_view_function(self):
+	def test_homepage_html(self):
 		"""
-		Test Home page html with TestFactory
+		Example: code validation, search HTML for text
 		"""
-		request = self.factory.get('/item/django-beginners')
+		request = HttpRequest()
+		engine = import_module(settings.SESSION_ENGINE)
+		request.session = engine.SessionStore()
 		response = all_products(request)
-		html = response.content.decode("utf8")
-
+		html = response.content.decode('utf8')
 		self.assertIn('<title>Home</title>', html)
-		self.assertTrue(html.startswith("\n<!DOCTYPE html>\n"))
+		self.assertTrue(html.startswith('\n<!DOCTYPE html>\n'))
 		self.assertEqual(response.status_code, 200)
 
