@@ -58,7 +58,7 @@
 			data: {
 				productid: $(this).data('index'),
 				csrfmiddlewaretoken: "{{ csrf_token }}",
-				action: 'delete'
+				action: 'post'
 			},
 			success: function(json) {
                 $('.product-item[data-index="'+ prodid +'"]').remove();

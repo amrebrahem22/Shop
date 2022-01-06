@@ -15,16 +15,16 @@ class Basket:
 
         self.basket = basket
 
-    def add(self, product, product_qty):
+    def add(self, product, qty):
         """
-        Adding and updating users basket session
+        Adding and updating the users basket session data
         """
-        product_id =str(product.id)
+        product_id = str(product.id)
 
-        if product_id not in self.basket:
-            self.basket[product.id]['qty'] = product_qty
+        if product_id in self.basket:
+            self.basket[product_id]['qty'] = qty
         else:
-            self.basket[product_id] = {'price': str(product.price), 'qty': int(product_qty)}
+            self.basket[product_id] = {'price': str(product.price), 'qty': qty}
 
         self.save()
 
