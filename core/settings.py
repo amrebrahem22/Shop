@@ -1,14 +1,20 @@
+import environ
 import os
 from pathlib import Path
 
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-SECRET_KEY = 'django-insecure-_5&jy75ugbk8fgc#f=*+jnw5hg__714gr+mlt2!95=bw5l7ff$'
+SECRET_KEY = env('SECRET_KEY')
 
-DEBUG = True
+DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = ["yourdomain.com", "127.0.0.1"]
+ALLOWED_HOSTS = ["yourdomain.com", "127.0.0.1", 'localhost']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -20,7 +26,9 @@ INSTALLED_APPS = [
     'django_countries',
     'store',
     'basket',
-    'account'
+    'account',
+    'payment',
+    'orders'
 ]
 
 MIDDLEWARE = [
@@ -103,3 +111,11 @@ LOGIN_URL = '/account/login'
 PASSWORD_RESET_TIMEOUT_DAYS = 2
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+STRIPE_API_KEY = env('STRIPE_API_KEY')
+STRIPE_PUB_KEY = env('STRIPE_PUB_KEY')
+# Basket session ID
+BASKET_SESSION_ID = 'basket'
+
+STRIPE_ENDPOINT_SECRET = 'whsec_SlsWqeNYX4knbEeHG5JVJ5D5baLsfBmI'
+# stripe listen --forward-to localhost:8000/payment/webhook/

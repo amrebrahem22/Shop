@@ -12,6 +12,9 @@ flake8-isort = "*"
 django-countries = "*"
 autopep8 = "*"
 six = "*"
+django-environ = "*"
+stripe3 = "*"
+stripe = "*"
 
 [dev-packages]
 
