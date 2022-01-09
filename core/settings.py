@@ -1,12 +1,20 @@
+import environ
 import os
 from pathlib import Path
 
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-SECRET_KEY = 'django-insecure-_5&jy75ugbk8fgc#f=*+jnw5hg__714gr+mlt2!95=bw5l7ff$'
 
-DEBUG = True
+
+SECRET_KEY = env('SECRET_KEY')
+
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = ["yourdomain.com", "127.0.0.1"]
 
@@ -20,7 +28,8 @@ INSTALLED_APPS = [
     'django_countries',
     'store',
     'basket',
-    'account'
+    'account',
+    'payment'
 ]
 
 MIDDLEWARE = [
@@ -103,3 +112,6 @@ LOGIN_URL = '/account/login'
 PASSWORD_RESET_TIMEOUT_DAYS = 2
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+STRIPE_API_KEY = env('STRIPE_API_KEY')
+STRIPE_PUB_KEY = env('STRIPE_PUB_KEY')
