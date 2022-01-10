@@ -6,7 +6,7 @@ env = environ.Env(
     DEBUG=(bool, False)
 )
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_countries',
+    'mptt',
     'store',
     'basket',
     'account',
